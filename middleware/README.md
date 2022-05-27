@@ -2,7 +2,7 @@
 
 This folder contains my notes and examples of how to write HTTP middleware in Go.
 
-It uses the the standard `net/http` package, [`zap`](https://github.com/uber-go/zap) for logging, and [`Alice`](https://github.com/justinas/alice for easier chaining of middleware.
+It uses the the standard `net/http` package, [`zap`](https://github.com/uber-go/zap) for logging, and [`Alice`](https://github.com/justinas/alice) for easier chaining of middleware.
 
 References:
 
