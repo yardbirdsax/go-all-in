@@ -1,0 +1,10 @@
+ARG GO_VERSION=1.18
+FROM golang:${GO_VERSION}
+
+WORKDIR /app
+COPY go.* /app/
+RUN go mod download
+
+COPY ./ ./
+
+ENTRYPOINT [ "go", "test", "./...", "-v", "-tags", "integration" ]
