@@ -21,17 +21,11 @@ To accomplish this, I did the following:
     require.NotEmpty(t, URL)
     require.NotEmpty(t, expectedValue)
   ```
-* Bundled the integration test into its own Docker image, such that once built it could be run anywhere that has Docker installed. The Dockerfile simply runs `go test` as its entrypoint.
+* Bundled the integration test into its own [Docker image](../../Dockerfile.api.integration), such that once built it could be run anywhere that has Docker installed. The Dockerfile simply runs `go test` as its entrypoint.
   ```Dockerfile
   ENTRYPOINT [ "go", "test", "./...", "-v", "-tags", "integration" ]
   ```
   > Note the use of [build constraints](https://pkg.go.dev/cmd/go#hdr-Build_constraints), thereby ensuring these test files a) aren't built as part of a normal `go build` run; b) a regular `go test ...` run won't invoke these tests.
-
-## Components
-
-The web API is defined in the [`web/web.go`](web/web.go) file, and the tests are in the [`integration/web_test.go`](integration/web_test.go) file.
-
-There are two Dockerfiles: [`Dockerfile.web`](Dockerfile.web), which builds the image for the web API, and [`Dockerfile.int-test`](Dockerfile.int-test), which packages the integration tests.
 
 ## Executing Test
 
