@@ -1,0 +1,22 @@
+ARG GO_VERSION=1.18
+FROM golang:${GO_VERSION} AS builder
+
+WORKDIR /app
+COPY go.* /app/
+RUN go mod download
+
+COPY ./ ./
+
+RUN CGO_ENABLED=0 go build -o /api ./cmd/api.go
+RUN ls
+
+FROM alpine as final
+
+ARG VERSION
+
+WORKDIR /app
+COPY --from=builder /api ./
+
+ENV API_VERSION=${VERSION}
+
+ENTRYPOINT ["/app/api"]

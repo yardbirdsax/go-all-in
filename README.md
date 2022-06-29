@@ -8,4 +8,4 @@ This repository contains my notes and explorations of go. Inspired by Josh Duffn
 
 ## Contents
 
-* **[Middleware](middleware/):** How do you write middleware for Go REST APIs? Plus a bit of structured logging using [`zap`](https://github.com/uber-go/zap).
+* **[API](api/):** A REST API written in Go, using things like [zap](https://github.com/uber-go/zap) and middlewares. Plus an interesting foray into how to write integration tests in a re-usable / portalbe way.
