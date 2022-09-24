@@ -2,5 +2,5 @@
 package tools
 
 import (
-	"github.com/posener/goreadme/cmd/goreadme"
+	_ "github.com/posener/goreadme/cmd/goreadme"
 )
