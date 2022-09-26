@@ -4,6 +4,8 @@ DOCKER_NETWORK_NAME=golang-web
 VERSION=1
 GO_IMAGE_NAME=golang
 GO_VERSION=1.18
+GOBIN_PATH = $$PWD/.bin
+ENV_VARS = GOBIN="$(GOBIN_PATH)" PATH="$(GOBIN_PATH):$$PATH"
 .SILENT:
 
 export SHELL:=/bin/bash
@@ -47,6 +49,10 @@ docker-stop-web:
 		docker stop $(WEB_IMAGE_NAME); \
 	fi
 
+.PHONY: generate
+generate:
+	$(ENV_VARS) go generate ./...
+
 .PHONY: run-integration-test
 run-integration-test:
 	function tearDown {
@@ -61,8 +67,8 @@ run-integration-test:
 
 .PHONY: test
 test:
-	docker run \
-		--rm \
-		--name $(WEB_IMAGE_NAME)-test \
-		$(GO_IMAGE_NAME):$(GO_VERSION)
-		go test -v -tags unit ./...
+	go test -v -count=1 -cover -tags unit -coverprofile coverage.out ./...
+
+.PHONY: tool
+tools:
+	$(ENV_VARS) go install $$(go list -f '{{join .Imports " "}}' tools.go)
