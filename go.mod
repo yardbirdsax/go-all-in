@@ -6,7 +6,7 @@ require (
 	github.com/justinas/alice v1.2.0
 	github.com/posener/goreadme v1.4.2
 	github.com/stretchr/testify v1.8.1
-	go.uber.org/zap v1.23.0
+	go.uber.org/zap v1.24.0
 )
 
 require (
