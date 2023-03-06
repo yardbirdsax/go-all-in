@@ -5,7 +5,7 @@ go 1.17
 require (
 	github.com/justinas/alice v1.2.0
 	github.com/posener/goreadme v1.4.2
-	github.com/stretchr/testify v1.8.1
+	github.com/stretchr/testify v1.8.2
 	go.uber.org/zap v1.23.0
 )
 
