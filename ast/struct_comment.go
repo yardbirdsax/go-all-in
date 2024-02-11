@@ -4,13 +4,20 @@ import (
 	"go/ast"
 	"go/parser"
 	"go/token"
-  "reflect"
+	"reflect"
 )
 
 type StructComment struct {
   PackageName string
   File string
   Name string
+  Comment string
+  FieldComments []FieldComment
+}
+
+type FieldComment struct {
+  Name string
+  Type string
   Comment string
 }
 
@@ -34,12 +41,28 @@ func GetStructComments(paths ...string) []StructComment {
               File: f.Name.Name,
               Name: typeSpec.Name.Name,
             }
+
             structLine := fileset.Position(typeSpec.Pos()).Line
             for _, cGroup := range f.Comments {
               if fileset.Position(cGroup.End()).Line == structLine - 1{
                 structComment.Comment = cGroup.Text()
               }
             }
+
+            structType := n.(*ast.StructType)
+            for _, fld := range structType.Fields.List {
+              fldLine := fileset.Position(fld.Pos()).Line
+              fldComment := FieldComment{
+                Name: fld.Names[0].Name,
+                Type: reflect.TypeOf(fld.Type).Elem().Name(),
+              }
+              for _, cGroup := range f.Comments {
+                if fileset.Position(cGroup.End()).Line == fldLine - 1 {
+                  fldComment.Comment = cGroup.Text()
+                }
+              }
+            }
+
             structComments = append(structComments, structComment)
           }
           return true

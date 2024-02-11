@@ -1,4 +1,4 @@
-package astor
+package aster
 
 // This should not show up
 type Something int

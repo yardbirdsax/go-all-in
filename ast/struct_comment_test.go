@@ -15,6 +15,13 @@ func TestGetStructComments(t *testing.T) {
       Comment: "Astor is a struct used to showcase how to do type level introspection / parsing with `ast`.\n" +
                "All of these lines are considered to be in the same Node / comment block, since they are on\n" +
                "subsequent lines with no breaks.\n",
+      FieldComments: []FieldComment{
+        {
+          Name: "Field",
+          Type: "string",
+          Comment: "Field is a field used to showcase how to access field level comments with `ast`.\n",
+        },
+      },
     },
     {
       PackageName: "astor",
