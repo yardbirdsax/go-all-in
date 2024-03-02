@@ -3,7 +3,7 @@ TEST_IMAGE_NAME=golang-web-test
 DOCKER_NETWORK_NAME=golang-web
 VERSION=1
 GO_IMAGE_NAME=golang
-GO_VERSION=1.18
+GO_VERSION=1.21
 .SILENT:
 
 export SHELL:=/bin/bash
