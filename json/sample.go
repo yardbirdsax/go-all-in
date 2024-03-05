@@ -9,11 +9,12 @@ import (
 )
 
 const (
-	colon   byte = ':'
-	comma   byte = ','
-	newline byte = '\n'
-	quote   byte = '"'
-	space   byte = ' '
+	colon        byte = ':'
+	comma        byte = ','
+	newline      byte = '\n'
+	quote        byte = '"'
+	space        byte = ' '
+	rightBracket byte = '}'
 )
 
 type item struct {
@@ -42,7 +43,7 @@ func (i *itemWithUnmarshal) UnmarshalJSON(data []byte) (err error) {
 			}
 			return fmt.Errorf("error scanning for quote: %w", err)
 		}
-		keyBytes, err := readUntil(buf, quote)
+		keyBytes, err := readUntil(buf, quote, true)
 		if err != nil {
 			return fmt.Errorf("error reading key: %w", err)
 		}
@@ -71,14 +72,14 @@ func (i *itemWithUnmarshal) UnmarshalJSON(data []byte) (err error) {
 }
 
 // seek advances a buffer until it hits the given character, or encounters an error.
-func seek(buf *bytes.Buffer, char byte) (err error) {
-	_, err = readUntil(buf, char)
+func seek(buf io.ByteReader, char byte) (err error) {
+	_, err = readUntil(buf, char, false)
 	return err
 }
 
 // readValue reads a buffer to decode a value (i.e., in a JSON key/value pair). It will return
 // a string representation of the value.
-func readValue(buf *bytes.Buffer) (val []byte, err error) {
+func readValue(buf io.ByteReader) (val []byte, err error) {
 	var got byte
 	// read until a non-space or quote character is found or EOF
 	for {
@@ -97,7 +98,7 @@ func readValue(buf *bytes.Buffer) (val []byte, err error) {
 		if err != nil {
 			return val, err
 		}
-		if got == quote || got == comma || got == newline {
+		if got == quote || got == comma || got == newline || got == rightBracket {
 			break
 		}
 		val = append(val, got)
@@ -106,8 +107,9 @@ func readValue(buf *bytes.Buffer) (val []byte, err error) {
 }
 
 // readUntil reads a buffer until it hits the given character, or encounters an error. If no error
-// is encountered, then it will return the contents of the buffer it read.
-func readUntil(buf *bytes.Buffer, char byte) (contents []byte, err error) {
+// is encountered, and returnContents is set to true, then it will return the contents of the buffer
+// it read.
+func readUntil(buf io.ByteReader, char byte, returnContents bool) (contents []byte, err error) {
 	var got byte
 	for {
 		got, err = buf.ReadByte()
@@ -115,12 +117,14 @@ func readUntil(buf *bytes.Buffer, char byte) (contents []byte, err error) {
 			if errors.Is(err, io.EOF) {
 				return nil, io.EOF
 			}
-			return contents, fmt.Errorf("could not locate starting quote character in buffer: %s", buf.Bytes())
+			return contents, fmt.Errorf("could not locate starting quote character in buffer")
 		}
 		if got == char {
 			break
 		}
-		contents = append(contents, got)
+		if returnContents {
+			contents = append(contents, got)
+		}
 	}
 	return contents, nil
 }

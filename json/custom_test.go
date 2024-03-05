@@ -1,6 +1,7 @@
 package json
 
 import (
+	"runtime"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -65,4 +66,18 @@ func BenchmarkCustom(b *testing.B) {
 
 	assert.Equal(b, want, got, "want and got differ")
 	assert.NoError(b, err, "err is not nil")
+}
+
+func BenchmarkCustomItem(b *testing.B) {
+	var err error
+	runtime.MemProfileRate = 1
+	data := []byte(`{"foo": "hello", "bar": 1}`)
+	it := &itemWithUnmarshal{}
+	b.ResetTimer()
+	for i := 0; i < b.N; i++ {
+		err = it.UnmarshalJSON(data)
+	}
+	if err != nil {
+		b.Errorf("error unmarshaling: %s", err.Error())
+	}
 }
