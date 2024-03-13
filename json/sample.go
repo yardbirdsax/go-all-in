@@ -11,10 +11,13 @@ import (
 const (
 	colon        byte = ':'
 	comma        byte = ','
+	leftBrace    byte = '{'
+	leftBracket  byte = '['
 	newline      byte = '\n'
 	quote        byte = '"'
 	space        byte = ' '
-	rightBracket byte = '}'
+	rightBrace   byte = '}'
+	rightBracket byte = ']'
 )
 
 type item struct {
@@ -23,7 +26,7 @@ type item struct {
 }
 
 type sample struct {
-	Count int
+	Count int64
 	Items []item
 }
 
@@ -43,7 +46,7 @@ func (i *itemWithUnmarshal) UnmarshalJSON(data []byte) (err error) {
 			}
 			return fmt.Errorf("error scanning for quote: %w", err)
 		}
-		keyBytes, err := readUntil(buf, quote, true)
+		keyBytes, err := readValue(buf)
 		if err != nil {
 			return fmt.Errorf("error reading key: %w", err)
 		}
@@ -73,8 +76,20 @@ func (i *itemWithUnmarshal) UnmarshalJSON(data []byte) (err error) {
 
 // seek advances a buffer until it hits the given character, or encounters an error.
 func seek(buf io.ByteReader, char byte) (err error) {
-	_, err = readUntil(buf, char, false)
-	return err
+	var got byte
+	for {
+		got, err = buf.ReadByte()
+		if err != nil {
+			if errors.Is(err, io.EOF) {
+				return io.EOF
+			}
+			return err
+		}
+		if got == char {
+			break
+		}
+	}
+	return nil
 }
 
 // readValue reads a buffer to decode a value (i.e., in a JSON key/value pair). It will return
@@ -98,7 +113,7 @@ func readValue(buf io.ByteReader) (val []byte, err error) {
 		if err != nil {
 			return val, err
 		}
-		if got == quote || got == comma || got == newline || got == rightBracket {
+		if got == quote || got == comma || got == newline || got == rightBrace {
 			break
 		}
 		val = append(val, got)
@@ -109,24 +124,25 @@ func readValue(buf io.ByteReader) (val []byte, err error) {
 // readUntil reads a buffer until it hits the given character, or encounters an error. If no error
 // is encountered, and returnContents is set to true, then it will return the contents of the buffer
 // it read.
-func readUntil(buf io.ByteReader, char byte, returnContents bool) (contents []byte, err error) {
+func readUntil(buf io.ByteReader, char byte, out io.ByteWriter) (err error) {
 	var got byte
 	for {
 		got, err = buf.ReadByte()
 		if err != nil {
 			if errors.Is(err, io.EOF) {
-				return nil, io.EOF
+				return io.EOF
 			}
-			return contents, fmt.Errorf("could not locate starting quote character in buffer")
+			return err
 		}
 		if got == char {
 			break
 		}
-		if returnContents {
-			contents = append(contents, got)
+		err = out.WriteByte(got)
+		if err != nil {
+			return err
 		}
 	}
-	return contents, nil
+	return nil
 }
 
 type sampleWithUnmarshal struct {
