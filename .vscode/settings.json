@@ -1,5 +1,12 @@
 {
   "go.buildTags": "integration",
   "rewrap.autoWrap.enabled": true,
-  "rewrap.wrappingColumn": 100
+  "rewrap.wrappingColumn": 100,
+  "[terraform]": {
+    "editor.tabSize": 2,
+    "editor.useTabStops": true,
+  },
+  "files.associations": {
+    "*.hcl": "terraform"
+  }
 }
