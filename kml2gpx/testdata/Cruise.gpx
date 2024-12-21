@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gpx>
+  <metadata>
+    <name>Cruise</name>
+  </metadata>
+  <trk>
+    <name>Cruise</name>
+    <trkseg>
+      <trkpt lat="40.10141000" lon="-75.4483600">
+        <ele>0</ele>
+      </trkpt>
+      <trkpt lat="40.10162000" lon="-75.4481000">
+        <ele>0</ele>
+      </trkpt>
+      <trkpt lat="40.10174000" lon="-75.4479700">
+        <ele>0</ele>
+      </trkpt>
+      <trkpt lat="40.10184000" lon="-75.4478800">
+        <ele>0</ele>
+      </trkpt>
+      <trkpt lat="40.10194000" lon="-75.4478100">
+        <ele>0</ele>
+      </trkpt>
+    </trkseg>
+  </trk>
+</gpx>
+
