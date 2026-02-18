@@ -1,0 +1,12 @@
+MP4 Inspector - Implementation Progress
+
+[x] Step 1: Box scanner - top-level box reading with size+type
+[x] Step 2: Recursive box parser - container box recursion, sample entry handling
+[x] Step 3: Parse key boxes - ftyp, mvhd, tkhd, mdhd, hdlr, stsd, avcC, esds, stts, stss, stsz
+[x] Step 4: Report generation - computed values (fps, bitrate, duration), formatted output
+[x] Step 5: Tests - 16 unit tests + 1 ffprobe comparison test, all passing
+
+All ffprobe fields match exactly:
+  Video: h264, High, level 40, 1920x1080, 306 frames, 13768477 bps
+  Audio: aac, LC, 48000 Hz, 2 channels, 125629 bps
+  Duration: 12.762750s
