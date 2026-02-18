@@ -119,6 +119,9 @@ Be thorough but concise in your report.
 
 **Claude:** **[Proposed Plan]**
 
+<details>
+<summary>View plan</summary>
+
 # MP4 Inspector — Pure Go, stdlib only
 
 ## Context
@@ -183,6 +186,8 @@ Compute derived values (frame rate, bitrate, duration in seconds) and format a c
 4. Compare key values (resolution, duration, codec, frame rate) against `ffprobe -show_streams -show_format ~/Movies/Final/Cat.mp4` output
 
 
+</details>
+
 **Josh:** **[Plan rejected]**
 
 The validation MUST be comparing the output of this new tool to the native `ffprobe` implementation. `ffprobe` MUST be considered the reference implementation.
@@ -190,6 +195,9 @@ The validation MUST be comparing the output of this new tool to the native `ffpr
 **Claude:** Good point. Let me update the verification section to make ffprobe the explicit reference and define how we'll compare.
 
 **Claude:** **[Proposed Plan]**
+
+<details>
+<summary>View plan</summary>
 
 # MP4 Inspector — Pure Go, stdlib only
 
@@ -286,11 +294,16 @@ go build ./transcoder && ./transcoder ~/Movies/Final/Cat.mp4
 Visually confirm output looks reasonable and matches ffprobe.
 
 
+</details>
+
 **Josh:** **[Plan rejected]**
 
 There MUST not be any differences in the output. Test MUST fail if `ffprobe` is not installed.
 
 **Claude:** **[Proposed Plan]**
+
+<details>
+<summary>View plan</summary>
 
 # MP4 Inspector — Pure Go, stdlib only
 
@@ -390,5 +403,7 @@ go build ./transcoder && ./transcoder ~/Movies/Final/Cat.mp4
 Visually confirm output looks reasonable and matches ffprobe.
 
 
-**Josh:** **[Plan rejected]**
+</details>
+
+**Josh:** **[Plan accepted — context cleared]**
 
